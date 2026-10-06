@@ -69,10 +69,14 @@ void main() {
     // before committing to the full film.
     final total = int.tryParse(Platform.environment['DEMO_FRAMES'] ?? '') ??
         kFilmSeconds * 60;
+    // DEMO_FROM skips the PNG work on early frames while still pumping them, so
+    // a copy change can be re-filmed as a tail instead of as another 30 minutes.
+    final from = int.tryParse(Platform.environment['DEMO_FROM'] ?? '') ?? 0;
     final stopwatch = Stopwatch()..start();
 
     for (var i = 0; i < total; i++) {
       await t.pump(const Duration(microseconds: 16667));
+      if (i < from) continue;
       // Rasterising is real asynchronous work, and the test binding runs the
       // body inside a fake-async zone where such a future never settles.
       // runAsync steps outside that zone for the duration of the capture.
@@ -90,6 +94,7 @@ void main() {
         print('frame $i/$total  ${stopwatch.elapsed.inSeconds}s elapsed');
       }
     }
-    print('wrote $total frames to $out in ${stopwatch.elapsed.inSeconds}s');
+    print('wrote ${total - from} of $total frames to $out '
+        'in ${stopwatch.elapsed.inSeconds}s');
   }, timeout: const Timeout(Duration(minutes: 30)));
 }
