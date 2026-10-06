@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 
 import '../core/l10n.dart';
 import '../core/palette.dart';
+import '../game/bot.dart';
 import '../game/painter.dart';
 import '../game/sim.dart';
 import '../state/save.dart';
@@ -14,9 +15,21 @@ import '../ui/kit.dart';
 enum DebugOverlay { none, paused, result }
 
 class GameScreen extends StatefulWidget {
-  const GameScreen({super.key, this.debugOverlay = DebugOverlay.none});
+  const GameScreen({
+    super.key,
+    this.debugOverlay = DebugOverlay.none,
+    this.autoPlay = false,
+    this.seed = 20261005,
+  });
 
   final DebugOverlay debugOverlay;
+
+  /// Let the autopilot play. Used to film demo footage, and as an attract mode
+  /// on the web build (`?demo=1`).
+  final bool autoPlay;
+
+  /// Level seed. The world is generated deterministically from it.
+  final int seed;
 
   @override
   State<GameScreen> createState() => _GameScreenState();
@@ -24,7 +37,8 @@ class GameScreen extends StatefulWidget {
 
 class _GameScreenState extends State<GameScreen>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
-  final sim = GameSim(seed: 20261005);
+  late final GameSim sim = GameSim(seed: widget.seed);
+  late final Bot _bot;
   late final AnimationController _c;
   int _lastUs = 0;
   double _now = 0;
@@ -42,6 +56,7 @@ class _GameScreenState extends State<GameScreen>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    _bot = Bot(sim);
     // The controller is only a frame ticker: its elapsed time drives the sim,
     // so the duration is a ceiling on session length, not an animation length.
     // A year keeps it from ever completing and freezing the loop.
@@ -51,13 +66,9 @@ class _GameScreenState extends State<GameScreen>
     if (widget.debugOverlay == DebugOverlay.paused) {
       paused = true;
     } else if (widget.debugOverlay == DebugOverlay.result) {
-      // play the run with a simple bot so the card shows real numbers
-      for (var i = 0; i < 3600 && sim.end == End.running; i++) {
-        final g = sim.ground;
-        if (sim.grounded && g != null && g.x1 - sim.x < 14) {
-          sim.press();
-          sim.release();
-        }
+      // Play the run with the real autopilot so the card shows honest numbers.
+      for (var i = 0; i < 60 * 44 && sim.end == End.running; i++) {
+        _bot.step();
         sim.update(1 / 60);
       }
       runMeters = (sim.dist / 10).round();
@@ -95,6 +106,7 @@ class _GameScreenState extends State<GameScreen>
     _now += dt;
 
     if (!paused && !showResult) {
+      if (widget.autoPlay) _bot.step();
       sim.update(dt);
       _hint += dt;
       if (_zoneToast > 0) _zoneToast -= dt;
@@ -109,7 +121,12 @@ class _GameScreenState extends State<GameScreen>
   }
 
   Future<void> _finish() async {
-    final isBest = await Save.submitRun(meters: runMeters, carrots: sim.carrotsEaten);
+    var isBest = false;
+    // An autopilot run is footage, not a player's score: never record it, and
+    // never claim a personal best for it either.
+    if (!widget.autoPlay) {
+      isBest = await Save.submitRun(meters: runMeters, carrots: sim.carrotsEaten);
+    }
     if (!mounted) return;
     setState(() {
       newBest = isBest;

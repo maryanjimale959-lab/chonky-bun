@@ -25,9 +25,12 @@ class _HomeScreenState extends State<HomeScreen>
     _t = AnimationController(
         vsync: this, duration: const Duration(seconds: 24))
       ..repeat();
-    // ?play=1 opens straight into a run, ?guide=1 opens the how-to first
+    // ?play=1 opens straight into a run, ?guide=1 opens the how-to first,
+    // ?demo=1 lets the autopilot play so the game can show itself off
     final q = Uri.base.queryParameters;
-    if (q['play'] == '1') {
+    if (q['demo'] == '1') {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _play(autoPlay: true));
+    } else if (q['play'] == '1') {
       WidgetsBinding.instance.addPostFrameCallback((_) => _play());
     } else if (q['guide'] == '1') {
       WidgetsBinding.instance.addPostFrameCallback((_) => _openOnboarding());
@@ -47,10 +50,15 @@ class _HomeScreenState extends State<HomeScreen>
         child: const OnboardingScreen(), alignment: AlignmentDirectional.centerStart));
   }
 
-  void _play() {
+  /// A level the autopilot survives a good long while on, chosen by
+  /// `dart run tool/botbench.dart`. Attract mode should look worth watching.
+  static const _demoSeed = 69;
+
+  void _play({bool autoPlay = false}) {
     Navigator.of(context).push(PageRouteBuilder(
       transitionDuration: const Duration(milliseconds: 320),
-      pageBuilder: (_, _, _) => const GameScreen(),
+      pageBuilder: (_, _, _) => GameScreen(
+          autoPlay: autoPlay, seed: autoPlay ? _demoSeed : 20261005),
       transitionsBuilder: (_, anim, _, child) => FadeTransition(
         opacity: anim,
         child: child,
