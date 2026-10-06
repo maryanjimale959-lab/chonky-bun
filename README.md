@@ -7,6 +7,8 @@ still clear every gap - the challenge is rhythm, not luck.
 Bauhaus monochrome art, bilingual English + Arabic interface, and a single-button
 control scheme. Runs as a native Android app (APK) and in any browser (Flutter Web).
 
+Created by Maryam J.
+
 ![Home](test/goldens/home_landscape.png)
 
 ## Controls
@@ -59,14 +61,14 @@ ship an Arabic fallback.
 ## Tests
 
 ```
-flutter test                # 22 tests
+flutter test                # 23 tests
 flutter analyze
 ```
 
-- `test/sim_test.dart` - physics and generator invariants.
-- `test/render_test.dart` - 12 golden screenshots across portrait and landscape,
-  including the HUD and both overlays. Fonts are loaded explicitly in `setUpAll` because
-  `flutter test` disables asset fonts by default.
+- `test/sim_test.dart` - 11 tests for physics and generator invariants.
+- `test/render_test.dart` - 11 golden tests covering 12 screenshots across portrait and
+  landscape, including the HUD and both overlays. Fonts are loaded explicitly in
+  `setUpAll` because `flutter test` disables asset fonts by default.
 - `test/icon_test.dart` - draws the launcher icon at every density using the game's own
   painters; runs only when `ICON_OUT=1` is set.
 
