@@ -1,11 +1,11 @@
 {
-  "name": "Munchi Bun",
-  "short_name": "Munchi Bun",
+  "name": "Chonky Bun",
+  "short_name": "Chonky Bun",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#E6E1D7",
   "theme_color": "#111111",
-  "description": "Rooftop run for a chubby rabbit. Eat carrots, get heavy, still reach the goal.",
+  "description": "Rooftop run for a chonky rabbit. Eat carrots, get heavy, blame the carrot.",
   "orientation": "portrait-primary",
   "prefer_related_applications": false,
   "icons": [

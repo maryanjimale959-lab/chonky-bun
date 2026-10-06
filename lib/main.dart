@@ -15,16 +15,16 @@ void main() async {
     systemNavigationBarIconBrightness: Brightness.dark,
   ));
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-  runApp(const MunchiBunApp());
+  runApp(const ChonkyBunApp());
 }
 
-class MunchiBunApp extends StatelessWidget {
-  const MunchiBunApp({super.key});
+class ChonkyBunApp extends StatelessWidget {
+  const ChonkyBunApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Munchi Bun',
+      title: 'Chonky Bun',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,

@@ -1,9 +1,9 @@
-# Munchi Bun
+# Chonky Bun
 
-A chubby rooftop runner. You are a rabbit who eats carrots. Carrots are heavy. Being
+A chonky rooftop runner. You are a rabbit who eats carrots. Carrots are heavy. Being
 heavy makes you jump lower, and the gaps keep widening no matter how much you weigh -
 so greed is what eventually stops you. The challenge is rhythm, and knowing when to
-leave a carrot behind.
+leave a carrot behind. The carrots are the trap.
 
 Bauhaus monochrome art, bilingual English + Arabic interface, and a single-button
 control scheme. Runs as a native Android app (APK) and in any browser (Flutter Web).
@@ -52,7 +52,7 @@ What is deliberately *not* capped is the gap: gaps widen with distance travelled
 and never shrink because the rabbit happens to be fat. That is the whole
 punishment for eating - a lean rabbit clears everything the generator can produce,
 and a greedy one eventually meets a gap its own weight can no longer reach. The
-result card says "Too chubby to clear it" because that is genuinely what happened.
+result card says "Too chonky to clear it" because that is genuinely what happened.
 
 On top of that: coyote time, jump buffering, variable jump height, and a clamped
 integration step so a stalled frame can never push the rabbit through a wall.

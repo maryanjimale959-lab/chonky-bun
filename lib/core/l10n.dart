@@ -2,10 +2,10 @@
 class S {
   S._();
 
-  static const String title = 'MUNCHI BUN';
-  static const String titleAr = 'موتشي بون';
-  static const String tagline = 'Eat. Get round. Reach the goal.';
-  static const String taglineAr = 'كُل، اثقل، ووصّل للهدف.';
+  static const String title = 'CHONKY BUN';
+  static const String titleAr = 'تشونكي بون';
+  static const String tagline = 'Eat. Get chonky. Blame the carrot.';
+  static const String taglineAr = 'كُل، اثقل، واللوم على الجزرة.';
   static const String concept = 'CONCEPT';
 
   static const String play = 'PLAY';
@@ -56,7 +56,7 @@ class S {
 
   static const String fell = 'FELL OFF THE ROOFTOP';
   static const String fellAr = 'سقطت من فوق السطح';
-  static const String bumped = 'TOO CHUBBY TO CLEAR IT';
+  static const String bumped = 'TOO CHONKY TO CLEAR IT';
   static const String bumpedAr = 'ثقلك ما خلّاك تعدي';
 
   static const String newBest = 'NEW BEST';

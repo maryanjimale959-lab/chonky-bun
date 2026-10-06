@@ -150,41 +150,57 @@ class _HomeScreenState extends State<HomeScreen>
         children: [
           const Caps(S.concept, size: 9, color: Pal.grey, spacing: 4.2),
           const SizedBox(height: 8),
-          Text(
-            'MUNCHI',
-            style: TextStyle(
-              fontFamily: Type.family,
-              fontSize: big,
-              height: 0.86,
-              fontWeight: FontWeight.w800,
-              color: Pal.black,
-              letterSpacing: -1.2,
-            ),
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                'BUN',
-                style: TextStyle(
-                  fontFamily: Type.family,
-                  fontSize: big,
-                  height: 0.86,
-                  fontWeight: FontWeight.w400,
-                  color: Pal.black,
-                  letterSpacing: 6,
+          // "CHONKY" is a letter wider than the old mark, so the lockup can
+          // scale itself down at the last moment instead of spilling off the
+          // cream plate on a narrow phone. The design size still comes from
+          // [big], which keeps the landscape plate from ballooning.
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'CHONKY',
+                  style: TextStyle(
+                    fontFamily: Type.family,
+                    fontSize: big,
+                    height: 0.86,
+                    fontWeight: FontWeight.w800,
+                    color: Pal.black,
+                    letterSpacing: -1.2,
+                  ),
                 ),
-              ),
-              const SizedBox(width: 10),
-              Padding(
-                padding: EdgeInsets.only(bottom: big * 0.18),
-                child: Container(
-                    width: big * 0.16,
-                    height: big * 0.16,
-                    decoration:
-                        const BoxDecoration(color: Pal.accent, shape: BoxShape.circle)),
-              ),
-            ],
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      'BUN',
+                      style: TextStyle(
+                        fontFamily: Type.family,
+                        fontSize: big,
+                        height: 0.86,
+                        fontWeight: FontWeight.w400,
+                        color: Pal.black,
+                        letterSpacing: 6,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Padding(
+                      padding: EdgeInsets.only(bottom: big * 0.18),
+                      child: SizedBox(
+                        width: big * 0.16,
+                        height: big * 0.16,
+                        child: const DecoratedBox(
+                            decoration:
+                                BoxDecoration(color: Pal.accent, shape: BoxShape.circle)),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 6),
           Text(
