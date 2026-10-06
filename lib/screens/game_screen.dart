@@ -26,7 +26,6 @@ class _GameScreenState extends State<GameScreen>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   final sim = GameSim(seed: 20261005);
   late final AnimationController _c;
-  final Stopwatch _sw = Stopwatch()..start();
   int _lastUs = 0;
   double _now = 0;
   double _hint = 0;
@@ -43,7 +42,10 @@ class _GameScreenState extends State<GameScreen>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-    _c = AnimationController(vsync: this, duration: const Duration(hours: 1))
+    // The controller is only a frame ticker: its elapsed time drives the sim,
+    // so the duration is a ceiling on session length, not an animation length.
+    // A year keeps it from ever completing and freezing the loop.
+    _c = AnimationController(vsync: this, duration: const Duration(days: 365))
       ..addListener(_tick)
       ..forward();
     if (widget.debugOverlay == DebugOverlay.paused) {
@@ -82,10 +84,15 @@ class _GameScreenState extends State<GameScreen>
   }
 
   void _tick() {
-    final nowUs = _sw.elapsedMicroseconds;
-    final dt = (nowUs - _lastUs) / 1e6;
+    // Driven by the ticker, not a wall-clock Stopwatch, so the simulation
+    // advances on the binding's clock. That keeps golden tests reproducible.
+    final nowUs = (_c.lastElapsedDuration ?? Duration.zero).inMicroseconds;
+    // Clamp before the sim sees it: a GC pause, or returning from a backgrounded
+    // app, hands us a multi-second dt, and one integration step would carry the
+    // rabbit straight through a roof into a pit.
+    final dt = ((nowUs - _lastUs) / 1e6).clamp(0.0, 0.05);
     _lastUs = nowUs;
-    _now += dt.clamp(0.0, 0.05);
+    _now += dt;
 
     if (!paused && !showResult) {
       sim.update(dt);
